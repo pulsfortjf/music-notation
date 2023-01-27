@@ -112,23 +112,62 @@ def format_duration(note_list):
                 x[1] = EI
     return note_list
 
+def valid_input(inputNote):
+    #if input is play, that command is needed in order to continue the program so return true
+    if inputNote == "play":
+        return True
+    
+    valid_note = "ABCDEFG"
+    valid_octave = "123456"
+    valid_length = ["wh", "ha", "qu", "ei"]
+    valid_accidental = "#bn"
+    #input string should be exactly 11 characters, anything else is automatically invalid
+    if len(inputNote) != 11:
+        return False
+    else:
+        #input should have a comma and a space separating each part; split the string using ", " and the resulting list should be length 4, if not, the string is invalid
+        note_parts = str(inputNote).split(", ")
+        if len(note_parts) != 4:
+            print("Inputs must be in 4 parts all separated by a single comma and a space.")
+            return False
+        else:
+            #check each part of the list to see if that portion is valid, if all parts are valid, return True, if any part is not, return False
+            if len(note_parts[0]) != 1 or (note_parts[0] not in valid_note):
+                print("The Note you entered was not valid.")
+                return False
+            if len(note_parts[1]) != 1 or (note_parts[1] not in valid_octave):
+                print("The Octave you entered was not valid.")
+                return False
+            if len(note_parts[2]) != 2 or (note_parts[2] not in valid_length):
+                print("The Length you entered was not valid.")
+                return False
+            if len(note_parts[3]) != 1 or (note_parts[3] not in valid_accidental):
+                print("The Accidental you entered was not valid.")
+                return False
+        return True
+
 #takes the user input to put the notes into a list and then runs the play function when the user types play
 def takeInput(note_list):
     while True:
-        print("Input Format: note, octave, length, sharp/flat/natural")
-        print(" Where note, octave, length, and sharp/flat/natual are in the formats specified below:")
-        print(" note: Capital letter A-G")
-        print(" octave: A single number 1-6")
-        print(" length: Whole Note = wh, Half Note = ha, Quarter Note = qu, Eighth Note = ei")
-        print(" s/f/n: Sharp = #, Flat = b, Natural = n")
-        print(" Example: to input a quarter note 4th Octave A natural; A, 4, qu, n")
-        print("Type play when you have finished entering notes")
+        print(" Input Format: note, octave, length, sharp/flat/natural")
+        print("     Where note, octave, length, and sharp/flat/natual are in the formats specified below:")
+        print("     note: Capital letter A-G")
+        print("     octave: A single number 1-6")
+        print("     length: Whole Note = wh, Half Note = ha, Quarter Note = qu, Eighth Note = ei")
+        print("     s/f/n: Sharp = #, Flat = b, Natural = n")
+        print("     Example: to input a quarter note 4th Octave A natural; A, 4, qu, n")
+        print(" Type play when you have finished entering notes or type exit to quit the program")
         inputNote = input("Enter a note: ")
-        if (inputNote == "play"):
-            play(note_list)
-            break
+        if valid_input(inputNote):
+            if inputNote == "play":
+                play(note_list)
+                break
+            else:
+                inputNote = add_note_to_list(inputNote, note_list)
         else:
-            inputNote = add_note_to_list(inputNote, note_list)
+            if inputNote == "exit":
+                break
+            print("Input is invalid, please follow the specified format")
 
 def main():
     note_list = []
