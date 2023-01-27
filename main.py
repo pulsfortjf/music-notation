@@ -1,24 +1,54 @@
 import winsound
 
-#constants for duration (change this format later to use a formula)
-WH = 2000
-HA = 1000
-QU = 500
-EI = 250
+#default tempo is 120 bpm, if the user inputs "tempo" this will be changed to whatever the user selects
+_QU_len = 500
+_WH_len = int(_QU_len * 4)
+_HA_len = int(_QU_len * 2)
+_EI_len = int(_QU_len * 0.5)
+_QU_dot = int(_QU_len + _EI_len)
+_HA_dot = int(_HA_len + _QU_len)
 
 #constants for each note and its corresponding frequency
 C = 32.70 #Cn
-CsDb = 34.65 #Cs OR Db
+_CsDb = 34.65 #Cs OR Db
 D = 36.71 #Dn
-DsEb = 38.89 #Ds OR Eb
+_DsEb = 38.89 #Ds OR Eb
 E = 41.20 #En
 F = 43.65 #Fn
-FsGb = 46.25 #Fs OR Gb
+_FsGb = 46.25 #Fs OR Gb
 G = 49.00 #Gn
-GsAb = 51.91 #Gs OR Ab
+_GsAb = 51.91 #Gs OR Ab
 A = 55.00 #An
-AsBb = 58.27 #As OR Bb
+_AsBb = 58.27 #As OR Bb
 B = 61.74 #Bn
+
+def calc_tempo():
+    #first, prompt user to enter a tempo and take user input
+    print("Tempo should be entered as a string of digits and it must be greater than 0")
+    print("The tempo should be entered in BPM where the quarter note gets the beat")
+    while True:
+        #use try to set tempo to an int from the user input
+        try:    
+            tempo = int(input("Enter a tempo: "))
+        #if input can't be converted to int then the string is invalid
+        except:
+            print("Invalid tempo, please input a valid tempo")
+            print("Tempo should be entered as a string of digits and it must be greater than 0")
+            print("The tempo should be entered in BPM where the quarter note gets the beat")
+        #if no errors occur, continue to valid the tempo
+        else:
+            if tempo <= 0:
+                print("Tempo must be greater than 0.")
+            else:
+                global _WH_len, _HA_len, _QU_len, _EI_len, _QU_dot, _HA_dot
+                _QU_len = int((60 / tempo) * 1000)
+                _WH_len = int(_QU_len * 4)
+                _HA_len = int(_QU_len * 2)
+                _EI_len = int(_QU_len * 0.5)
+                _QU_dot = int(_QU_len + _EI_len)
+                _HA_dot = int(_HA_len + _QU_len)
+                print(f"Tempo is now set to {int(60 / (_QU_len / 1000))} BPM")
+                break
 
 #plays the notes the user input using winsound.Bee
 def play(note_list):
@@ -49,14 +79,18 @@ def calc_note(note):
 
     #convert the lowercase length from the user into the correct length constant
     match note_val[2]:
-        case "wh":
-            note_val[2] = WH
-        case "ha":
-            note_val[2] = HA
-        case "qu":
-            note_val[2] = QU
-        case "ei":
-            note_val[2] = EI
+        case "wh_":
+            note_val[2] = _WH_len
+        case "ha_":
+            note_val[2] = _HA_len
+        case "qu_":
+            note_val[2] = _QU_len
+        case "ei_":
+            note_val[2] = _EI_len
+        case "qu.":
+            note_val[2] = _QU_dot
+        case "ha.":
+            note_val[2] = _HA_dot
 
     #convert the notes the user input into the correct constant
     #convert the contant into the correct frequency based on the octave from the user input
@@ -65,25 +99,25 @@ def calc_note(note):
         case "Cn":
             return (calc_frequency(C, int(note_val[1])), note_val[2])
         case "Cs" | "Db":
-            return (calc_frequency(CsDb, int(note_val[1])), note_val[2])
+            return (calc_frequency(_CsDb, int(note_val[1])), note_val[2])
         case "Dn":
             return (calc_frequency(D, int(note_val[1])), note_val[2])
         case "Ds" | "Eb":
-            return (calc_frequency(DsEb, int(note_val[1])), note_val[2])
+            return (calc_frequency(_DsEb, int(note_val[1])), note_val[2])
         case "En":
             return (calc_frequency(E, int(note_val[1])), note_val[2])
         case "Fn":
             return (calc_frequency(F, int(note_val[1])), note_val[2])
         case "Fs" | "Gb":
-            return (calc_frequency(FsGb, int(note_val[1])), note_val[2])
+            return (calc_frequency(_FsGb, int(note_val[1])), note_val[2])
         case "Gn":
             return (calc_frequency(G, int(note_val[1])), note_val[2])
         case "Gs" | "Ab":
-            return (calc_frequency(GsAb, int(note_val[1])), note_val[2])
+            return (calc_frequency(_GsAb, int(note_val[1])), note_val[2])
         case "An":
             return (calc_frequency(A, int(note_val[1])), note_val[2])
         case "As" | "Bb":
-            return (calc_frequency(AsBb, int(note_val[1])), note_val[2])
+            return (calc_frequency(_AsBb, int(note_val[1])), note_val[2])
         case "Bn":
             return (calc_frequency(B, int(note_val[1])), note_val[2])
 
@@ -102,27 +136,31 @@ def calc_frequency(input_note, n):
 def format_duration(note_list):
     for x in note_list:
         match x[1]:
-            case "wh":
-                x = WH
-            case "ha":
-                x[1] = HA
-            case "qu":
-                x[1] = QU
-            case "ei":
-                x[1] = EI
+            case "wh_":
+                x = _WH_len
+            case "ha_":
+                x[1] = _HA_len
+            case "qu_":
+                x[1] = _QU_len
+            case "ei_":
+                x[1] = _EI_len
+            case "qu.":
+                x[1] = _QU_dot
+            case "ha.":
+                x[1] = _HA_dot
     return note_list
 
 def valid_input(inputNote):
-    #if input is play, that command is needed in order to continue the program so return true
-    if inputNote == "play":
+    #if input is play or tempo, that command is needed in order to continue the program so return true
+    if inputNote == "play" or inputNote == "tempo":
         return True
     
     valid_note = "ABCDEFG"
     valid_octave = "123456"
-    valid_length = ["wh", "ha", "qu", "ei"]
+    valid_length = ["wh_", "ha_", "ha.", "qu_", "qu.", "ei_"]
     valid_accidental = "#bn"
-    #input string should be exactly 11 characters, anything else is automatically invalid
-    if len(inputNote) != 11:
+    #input string should be exactly 12 characters, anything else is automatically invalid
+    if len(inputNote) != 12:
         return False
     else:
         #input should have a comma and a space separating each part; split the string using ", " and the resulting list should be length 4, if not, the string is invalid
@@ -138,7 +176,7 @@ def valid_input(inputNote):
             if len(note_parts[1]) != 1 or (note_parts[1] not in valid_octave):
                 print("The Octave you entered was not valid.")
                 return False
-            if len(note_parts[2]) != 2 or (note_parts[2] not in valid_length):
+            if len(note_parts[2]) != 3 or (note_parts[2] not in valid_length):
                 print("The Length you entered was not valid.")
                 return False
             if len(note_parts[3]) != 1 or (note_parts[3] not in valid_accidental):
@@ -153,15 +191,18 @@ def takeInput(note_list):
         print("     Where note, octave, length, and sharp/flat/natual are in the formats specified below:")
         print("     note: Capital letter A-G")
         print("     octave: A single number 1-6")
-        print("     length: Whole Note = wh, Half Note = ha, Quarter Note = qu, Eighth Note = ei")
+        print("     length: Whole Note = wh_, Half Note = ha_, Dotted Half Note = ha., Quarter Note = qu_, Dotted Quarter Note = qu., Eighth Note = ei_")
         print("     s/f/n: Sharp = #, Flat = b, Natural = n")
-        print("     Example: to input a quarter note 4th Octave A natural; A, 4, qu, n")
-        print(" Type play when you have finished entering notes or type exit to quit the program")
+        print("     Example: to input a quarter note 4th Octave A natural; A, 4, qu_, n")
+        print(f" Current tempo = {int(60 / (_QU_len / 1000))}")
+        print(" Type play when you have finished entering notes, type exit to quit the program, or type tempo to change the tempo")
         inputNote = input("Enter a note: ")
         if valid_input(inputNote):
             if inputNote == "play":
                 play(note_list)
                 break
+            elif inputNote == "tempo":
+                calc_tempo()
             else:
                 inputNote = add_note_to_list(inputNote, note_list)
         else:
