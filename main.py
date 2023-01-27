@@ -33,7 +33,7 @@ def play(note_list):
 #adds the specific note to the list of notes
 def add_note_to_list(inputNote, note_list):
     note_list.append(calc_note(inputNote))
-    print(note_list)
+    #print(note_list)
 
 #takes the user input in its initial form and converts it to the tuple of (frequency, duration) that winsound.Beep can accept
 def calc_note(note):
