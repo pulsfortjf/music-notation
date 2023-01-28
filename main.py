@@ -1,4 +1,5 @@
 import winsound
+import mingus.core.notes as notes
 
 #default tempo is 120 bpm, if the user inputs "tempo" this will be changed to whatever the user selects
 _QU_len = 500
@@ -213,6 +214,9 @@ def takeInput(note_list):
 def main():
     #testing if winsound.PlaySound will play a wav file and how that function works
     #winsound.PlaySound("home_depot_theme_song.WAV", winsound.SND_FILENAME)
+
+    #testing if mingus imported and if notes are working
+    #print(notes.is_valid_note("C"))
     note_list = []
     takeInput(note_list)
     for x in note_list:
