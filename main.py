@@ -211,6 +211,8 @@ def takeInput(note_list):
             print("Input is invalid, please follow the specified format")
 
 def main():
+    #testing if winsound.PlaySound will play a wav file and how that function works
+    #winsound.PlaySound("home_depot_theme_song.WAV", winsound.SND_FILENAME)
     note_list = []
     takeInput(note_list)
     for x in note_list:
