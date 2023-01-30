@@ -1,5 +1,5 @@
 import winsound
-#import mingus.core.notes as notes
+import mingus.core.notes as notes
 
 #default tempo is 120 bpm, if the user inputs "tempo" this will be changed to whatever the user selects
 _QU_len = 500
