@@ -61,6 +61,10 @@ def play(note_list):
     #delete this later, its just so VSCode doesnt tell me there are errors
     #winsound.Beep(440, 1000)
 
+def select_octave(octave):
+    if 1 <= int(octave) <= 6:
+        return int(octave)
+
 #adds the specific note to the list of notes
 def add_note_to_list(inputNote, note_list):
     note_list.append(calc_note(inputNote))
@@ -211,6 +215,10 @@ def takeInput(note_list):
                 break
             print("Input is invalid, please follow the specified format")
 
+def print_notes(note_list):
+    for x in note_list:
+        print(x)
+
 def main():
     #testing if winsound.PlaySound will play a wav file and how that function works
     #winsound.PlaySound("home_depot_theme_song.WAV", winsound.SND_FILENAME)
@@ -223,4 +231,4 @@ def main():
     for x in note_list:
         print(x)
 
-main()
+#main()
