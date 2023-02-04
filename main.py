@@ -23,6 +23,37 @@ A = 55.00 #An
 _AsBb = 58.27 #As OR Bb
 B = 61.74 #Bn
 
+def calc_tempo(tempo):
+    #first, prompt user to enter a tempo and take user input
+    print("Tempo should be entered as a string of digits and it must be greater than 0")
+    print("The tempo should be entered in BPM where the quarter note gets the beat")
+    while True:
+        #use try to set tempo to an int from the user input
+        try:    
+            int_tempo = int(tempo)
+        #if input can't be converted to int then the string is invalid
+        except:
+            print("Invalid tempo, please input a valid tempo")
+            print("Tempo should be entered as a string of digits and it must be greater than 0")
+            print("The tempo should be entered in BPM where the quarter note gets the beat")
+            print(tempo)
+            break
+        #if no errors occur, continue to valid the tempo
+        else:
+            if int_tempo <= 0:
+                print("Tempo must be greater than 0.")
+            else:
+                global _WH_len, _HA_len, _QU_len, _EI_len, _QU_dot, _HA_dot
+                _QU_len = int((60 / int_tempo) * 1000)
+                _WH_len = int(_QU_len * 4)
+                _HA_len = int(_QU_len * 2)
+                _EI_len = int(_QU_len * 0.5)
+                _QU_dot = int(_QU_len + _EI_len)
+                _HA_dot = int(_HA_len + _QU_len)
+                print(f"Tempo is now set to {int(60 / (_QU_len / 1000))} BPM")
+                break
+
+"""
 def calc_tempo():
     #first, prompt user to enter a tempo and take user input
     print("Tempo should be entered as a string of digits and it must be greater than 0")
@@ -50,6 +81,7 @@ def calc_tempo():
                 _HA_dot = int(_HA_len + _QU_len)
                 print(f"Tempo is now set to {int(60 / (_QU_len / 1000))} BPM")
                 break
+"""
 
 #plays the notes the user input using winsound.Bee
 def play(note_list):
@@ -64,10 +96,13 @@ def play(note_list):
 def select_octave(octave):
     if 1 <= int(octave) <= 6:
         return int(octave)
+    else:
+        print("Octave must be in the range 1-6")
 
 #adds the specific note to the list of notes
 def add_note_to_list(inputNote, note_list):
-    note_list.append(calc_note(inputNote))
+    if valid_input(inputNote):
+        note_list.append(calc_note(inputNote))
     #print(note_list)
 
 #takes the user input in its initial form and converts it to the tuple of (frequency, duration) that winsound.Beep can accept
@@ -180,6 +215,7 @@ def valid_input(inputNote):
                 return False
             if len(note_parts[1]) != 1 or (note_parts[1] not in valid_octave):
                 print("The Octave you entered was not valid.")
+                print("Octave should be a single digit from 1-6.")
                 return False
             if len(note_parts[2]) != 3 or (note_parts[2] not in valid_length):
                 print("The Length you entered was not valid.")
