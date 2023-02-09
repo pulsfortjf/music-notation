@@ -5,15 +5,17 @@ from PIL import Image
 from main import *
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("1200x800")
+app.geometry("600x400")
+app.resizable(True, True)
 
 accidental_font = customtkinter.CTkFont(family="system-ui", size=20, weight="bold")
 
 note_font = customtkinter.CTkFont(family="sans-serif", size=15, weight="bold")
 
+"""
 flat_image = customtkinter.CTkImage(light_image=Image.open(".\\assets\\images\\flat_accidental.png"),
                                   dark_image=Image.open(".\\assets\\images\\flat_accidental.png"),
                                   size=(30, 30))
@@ -25,7 +27,7 @@ sharp_image = customtkinter.CTkImage(light_image=Image.open(".\\assets\\images\\
 nat_image = customtkinter.CTkImage(light_image=Image.open(".\\assets\\images\\natural_accidental.png"),
                                   dark_image=Image.open(".\\assets\\images\\natural_accidental.png"),
                                   size=(30, 30))
-
+"""
 
 octave = 4
 accidental = "n"
@@ -85,11 +87,12 @@ def get_octave():
     return octave
 
 def len_button_event():
-    print("radiobutton toggled, current value:", len_var.get())
+    print("length button toggled, current value:", len_var.get())
 
 def acc_button_event():
-    print("radiobutton toggled, current value:", acc_var.get())
+    print("accidental button toggled, current value:", acc_var.get())
 
+#converts numeric value of the note length radio buttons into the correct note length
 def change_note_len():
     #options for note_len:
     #   wh_  ha.  ha_  qu.  qu_  ei_
@@ -113,6 +116,7 @@ def change_note_len():
 def get_note_len():
     return change_note_len()
 
+#converts numeric value of the accidental radio buttons into the correct accidental
 def change_accidental():
         acc = acc_var.get()
         match acc:
@@ -127,44 +131,102 @@ def change_accidental():
 def get_accidental():
     return change_accidental()
 
+#this makes the accidental buttons unclickable (changes their text color to darkgray as defined below),
+# and sets the foreground color (the color of the selected button) to darkgray as well
+#this will be useful when measures can be displayed and measure checking + editing notes is implemented
+#   - measure checking will add rests to each measure, these rests can be edited but should not be able
+#     to be sharp/flat/natural so when a rest is selected, call this function to disable these buttons
+def disable_acc_buttons():
+    sharp_button.configure(state=tkinter.DISABLED, fg_color="darkgray")
+    flat_button.configure(state=tkinter.DISABLED, fg_color="darkgray")
+    nat_button.configure(state=tkinter.DISABLED, fg_color="darkgray")
+
 #removes last note in the list and prints the list
 def remove_note():
     if note_list:
         note_list.pop()
+        note_display.pop()
+    new_display = ""
+    for x in note_display:
+        new_display = new_display + x + " | "
+    
+    note_list_display.configure(text=new_display)
     print(note_list)
+
+#formats the most recent note into the form "Length: NoteAccidentalOctave"
+#EX: A, 4, qu_, n  ->  QU: An4
+def pretty_note(note: str, oct: str, len: str, acc: str):
+    #covert the len string to the correct form
+    match len:
+        case "wh_":
+            len = "WH"
+        case "ha_":
+            len = "HA"
+        case "qu_":
+            len = "QU"
+        case "ei_":
+            len = "EI"
+        case "qu.":
+            len = "Q."
+        case "ha.":
+            len = "H."
+    
+    ret = f"{len} :  {note}{acc}{oct}"
+    print(ret)
+    return ret
+
+#might want to keep a list of the "styled_note", it may be easier to implement editing notes
+#   using this list rather than note_list which is just a list of (frequency, duration) tuples
+def add_note_to_display(styled_note: str):
+    note_display.append(styled_note)
+    note_list_display.configure(text=(note_list_display.cget("text") + note_display[len(note_display)-1] + "  |  "))
 
 def add_A():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("A", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_B():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("B", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_C():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("C", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_D():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("D", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_E():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("E", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_F():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("F", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
 def add_G():
     print("called the add_note function in GUI-test")
+    styled_note = pretty_note("G", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
     add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     print(note_list)
 
@@ -178,67 +240,71 @@ def play():
 #button.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
 note_list = []
+note_display = []
 len_var = tkinter.IntVar(app, 5)
 acc_var = tkinter.IntVar(app, 3)
 
-tempo_button = customtkinter.CTkButton(master=app, text="Tempo", command=change_tempo)
-tempo_button.pack(padx=60, pady=10, anchor="w")
+play_button = customtkinter.CTkButton(master=app, text="Play", command=play)
+play_button.place(x=20, y=10)
+
+tempo_button = customtkinter.CTkButton(master=app, text="Change Tempo", command=change_tempo)
+tempo_button.place(x=20, y=50)
 
 tempo_entry = customtkinter.CTkEntry(master=app,
                                width=140,
                                height=25,
                                placeholder_text="Enter a new tempo",
                                corner_radius=5)
-tempo_entry.pack(padx=60, pady=0, anchor="w")
+tempo_entry.place(x=20, y=90)
 
 delete_button = customtkinter.CTkButton(master=app, text="Delete", command=remove_note)
-delete_button.pack(padx=60, pady=10, anchor="w")
-
-play_button = customtkinter.CTkButton(master=app, text="Play", command=play)
-play_button.pack(padx=60, pady=0, anchor="w")
+delete_button.place(x=20, y=130)
 
 octave_entry = customtkinter.CTkEntry(master=app,
                                width=140,
                                height=25,
                                placeholder_text="Enter a new Octave",
                                corner_radius=5)
-octave_entry.pack(padx=60, pady=10, anchor="w")
+octave_entry.place(x=20, y=170)
 
 A_button = customtkinter.CTkButton(master=app, text="A", command=add_A, width=40)
-A_button.place(relx=0.2, rely=0.05)
+A_button.place(x=200, y=10)
 
 B_button = customtkinter.CTkButton(master=app, text="B", command=add_B, width=40)
-B_button.place(relx=0.24, rely=0.05)
+B_button.place(x=250, y=10)
 
 C_button = customtkinter.CTkButton(master=app, text="C", command=add_C, width=40)
-C_button.place(relx=0.28, rely=0.05)
+C_button.place(x=300, y=10)
 
 D_button = customtkinter.CTkButton(master=app, text="D", command=add_D, width=40)
-D_button.place(relx=0.32, rely=0.05)
+D_button.place(x=350, y=10)
 
 E_button = customtkinter.CTkButton(master=app, text="E", command=add_E, width=40)
-E_button.place(relx=0.36, rely=0.05)
+E_button.place(x=400, y=10)
 
 F_button = customtkinter.CTkButton(master=app, text="F", command=add_F, width=40)
-F_button.place(relx=0.40, rely=0.05)
+F_button.place(x=450, y=10)
 
 G_button = customtkinter.CTkButton(master=app, text="G", command=add_G, width=40)
-G_button.place(relx=0.44, rely=0.05)
+G_button.place(x=500, y=10)
 
 # text="♯", font=accidental_font
 sharp_button = customtkinter.CTkRadioButton(master=app, text="♯", font=accidental_font,
-                                             command=acc_button_event, variable= acc_var, value=1)
-sharp_button.place(relx=0.2, rely=0.1, width=103)
+                                            text_color_disabled="darkgray",
+                                            command=acc_button_event, variable= acc_var, value=1)
+sharp_button.place(x=200, y=50, width=103)
 
 # text="♭", font=accidental_font
 flat_button = customtkinter.CTkRadioButton(master=app, text="♭", font=accidental_font,
-                                             command=acc_button_event, variable= acc_var, value=2)
-flat_button.place(relx=0.294, rely=0.1, width=103)
+                                            text_color_disabled="darkgray",
+                                            command=acc_button_event, variable= acc_var, value=2)
+flat_button.place(x=250, y=50, width=103)
 
 # text="♮", font=accidental_font
 nat_button = customtkinter.CTkRadioButton(master=app, text="♮", font=accidental_font,
-                                             command=acc_button_event, variable= acc_var, value=3)
-nat_button.place(relx=0.388, rely=0.1, width=103)
+                                            text_color_disabled="darkgray",
+                                            command=acc_button_event, variable= acc_var, value=3)
+nat_button.place(x=300, y=50, width=103)
 
 len_button_1 = customtkinter.CTkRadioButton(master=app, text="W", font=note_font,
                                              command=len_button_event, variable= len_var, value=1)
@@ -253,12 +319,15 @@ len_button_5 = customtkinter.CTkRadioButton(master=app, text="Q", font=note_font
 len_button_6 = customtkinter.CTkRadioButton(master=app, text="E", font=note_font,
                                              command=len_button_event, variable= len_var, value=6)
 
-len_button_1.place(relx=0.2, rely=0.15)
-len_button_2.place(relx=0.25, rely=0.15)
-len_button_3.place(relx=0.3, rely=0.15)
-len_button_4.place(relx=0.35, rely=0.15)
-len_button_5.place(relx=0.4, rely=0.15)
-len_button_6.place(relx=0.45, rely=0.15)
+len_button_1.place(x=200, y=90)
+len_button_2.place(x=250, y=90)
+len_button_3.place(x=300, y=90)
+len_button_4.place(x=350, y=90)
+len_button_5.place(x=400, y=90)
+len_button_6.place(x=450, y=90)
+
+note_list_display=customtkinter.CTkLabel(master=app, font=note_font, text="")
+note_list_display.place(x=200, y=130)
 
 """
 #these buttons will need a custom font before I can have music notes displayed on them
