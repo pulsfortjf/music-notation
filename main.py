@@ -190,6 +190,10 @@ def format_duration(note_list):
                 x[1] = _HA_dot
     return note_list
 
+def preview_note(note_list):
+    x = note_list[len(note_list) - 1]
+    winsound.Beep(int(x[0]), 500)
+
 def valid_input(inputNote):
     #if input is play or tempo, that command is needed in order to continue the program so return true
     if inputNote == "play" or inputNote == "tempo":

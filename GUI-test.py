@@ -186,6 +186,7 @@ def add_A():
     styled_note = pretty_note("A", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_B():
@@ -193,6 +194,7 @@ def add_B():
     styled_note = pretty_note("B", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_C():
@@ -200,6 +202,7 @@ def add_C():
     styled_note = pretty_note("C", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_D():
@@ -207,6 +210,7 @@ def add_D():
     styled_note = pretty_note("D", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_E():
@@ -214,6 +218,7 @@ def add_E():
     styled_note = pretty_note("E", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_F():
@@ -221,6 +226,7 @@ def add_F():
     styled_note = pretty_note("F", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def add_G():
@@ -228,6 +234,7 @@ def add_G():
     styled_note = pretty_note("G", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    preview_note(note_list)
     print(note_list)
 
 def play():
