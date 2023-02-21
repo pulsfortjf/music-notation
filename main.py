@@ -266,9 +266,10 @@ def main():
     #testing if mingus imported and if notes are working
     #print(notes.is_valid_note("C"))
     #adding this comment so I can commit and push to see if .gitignore is working
-    note_list = []
-    takeInput(note_list)
-    for x in note_list:
-        print(x)
+    #note_list = []
+    #takeInput(note_list)
+    #for x in note_list:
+    #    print(x)
+    print(notes.is_valid_note("C"))
 
-#main()
+main()
