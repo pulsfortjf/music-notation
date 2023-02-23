@@ -1,20 +1,20 @@
 import mingus.core.notes as notes
 from mingus.containers import Note, NoteContainer
 from mingus.midi import midi_file_out
-import winsound
-import pygame
-from pydub import AudioSegment
-import os
-import timidity
+from mingus.midi import fluidsynth
+#import winsound
+#import pygame
+#from pydub import AudioSegment
+#import os
+#import timidity
 
-def convert():
-    os.system("timidity test1.mid -Ow -o test2.wav")
+#def convert():
+    #os.system("timidity test1.mid -Ow -o test2.wav")
 
+"""
 def play_music(music_file):
-    """
-    stream music with mixer.music module in blocking manner
-    this will stream the sound from disk while playing
-    """
+    #stream music with mixer.music module in blocking manner
+    #this will stream the sound from disk while playing
     clock = pygame.time.Clock()
     try:
         pygame.mixer.music.load(music_file)
@@ -28,6 +28,16 @@ def play_music(music_file):
         # check if playback has finished
         print("still playing")
         clock.tick(30)
+"""
+
+
+def play_test():
+    n = Note("C-5")
+    n.channel = 5
+    n.velocity = 50
+    fluidsynth.play_Note(n)
+
+    print("success")
 
 def get_note(notes_list):
     input_note = input("Enter a note as a capital letter A-G followed by an optional accidental # or b: ")
@@ -36,12 +46,18 @@ def get_note(notes_list):
     print(notes_list)
 
 def main():
-    #notes_list = []
-    #get_note(notes_list)
-    nc = NoteContainer(["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"])
-    note_list = ["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"]
-    for x in note_list:
+    notes_list = []
+    get_note(notes_list)
+
+    fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.SF2")
+
+    play_test()
+    #nc = NoteContainer(["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"])
+    #note_list = ["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"]
+    for x in notes_list:
         midi_file_out.write_Note("test1.mid", Note(x), 120, 3)
+    
+    """
     freq = 44100    # audio CD quality
     bitsize = -16   # unsigned 16 bit
     channels = 1    # 1 is mono, 2 is stereo
@@ -54,4 +70,6 @@ def main():
     #play_music("D:\\Jack\\VSCode\\repos\\capstone-prototype\\capstone-prototype\\home_depot_theme_song.wav")
     convert()
     play_music("D:\\Jack\\VSCode\\repos\\capstone-prototype\\capstone-prototype\\test2.wav")
+    """
+
 main()
