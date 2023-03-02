@@ -3,6 +3,11 @@ import customtkinter
 import winsound
 from PIL import Image
 from main import *
+import mingus.core.notes as notes
+from mingus.containers import Note, Track, Bar
+from mingus.midi import fluidsynth
+import mingus.core.value as value
+import time
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -239,8 +244,52 @@ def add_G():
 
 def play():
     print("called the play function in GUI-test")
+    fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+
+    note_len = len_var.get()
+
+    match note_len:
+        case 1:
+            note_len = value.whole
+        case 2:
+            note_len = value.dots(value.half)
+        case 3:
+            note_len = value.half
+        case 4:
+            note_len = value.dots(value.quarter)
+        case 5:
+            note_len = value.quarter
+        case 6:
+            note_len = value.eighth
+
+    true_note_list = []
+
+    bar = Bar()
+    track = Track()
+    
     for x in note_list:
-        winsound.Beep(int(x[0]), x[1])
+        temp = Note()
+        temp = Note.from_hertz(temp, float(x[0]), 440)
+        track.add_notes(temp, note_len)
+        #if bar.current_beat != bar.length:
+        #    bar.place_notes(temp, note_len)
+
+            #true_note_list.append(temp)
+        #else:
+        #    track.add_bar(bar)
+        #    temp_bar = Bar()
+        #    bar = temp_bar
+        #    bar.place_notes(temp, note_len)
+    
+    fluidsynth.play_Track(track, 1, 120)
+
+    #playing the notes
+    #for x in true_note_list:
+    #    fluidsynth.play_Note(x)
+    #    time.sleep(0.1)
+    
+    #for x in note_list:
+    #    winsound.Beep(int(x[0]), x[1])
 
 # Use CTkButton instead of tkinter Button
 #button = customtkinter.CTkButton(master=app, text="CTkButton", command=button_function)

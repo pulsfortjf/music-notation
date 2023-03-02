@@ -1,5 +1,8 @@
 import winsound
 import mingus.core.notes as notes
+from mingus.containers import Note
+from mingus.midi import fluidsynth
+import time
 
 #default tempo is 120 bpm, if the user inputs "tempo" this will be changed to whatever the user selects
 _QU_len = 500
@@ -85,6 +88,19 @@ def calc_tempo():
 
 #plays the notes the user input using winsound.Bee
 def play(note_list):
+    fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+
+    true_note_list = []
+    for x in note_list:
+        temp = Note()
+        temp = Note.from_hertz(temp, float(x[0]), 440)
+        true_note_list.append(temp)
+    
+    #playing the notes
+    for x in true_note_list:
+        fluidsynth.play_Note(x)
+        time.sleep(0.1)
+
     #loop through the list and play each sound at the frequency specified and for the duration specified
     for x in note_list:
         winsound.Beep(int(x[0]), x[1])
