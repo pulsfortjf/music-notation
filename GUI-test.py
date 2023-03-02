@@ -245,7 +245,7 @@ def add_G():
 def play():
     print("called the play function in GUI-test")
     #fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
-    fluidsynth.init("D:\\Jack\\VSCode\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+    fluidsynth.init(".\\soundfonts\\FluidR3_GM.sf2", 'dsound')
 
     note_len = len_var.get()
 
