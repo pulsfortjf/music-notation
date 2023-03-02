@@ -4,7 +4,8 @@ import winsound
 from PIL import Image
 from main import *
 import mingus.core.notes as notes
-from mingus.containers import Note, Track, Bar
+from mingus.containers import Note, Track, Bar, NoteContainer
+from mingus.containers.instrument import MidiInstrument as mi
 from mingus.midi import fluidsynth
 import mingus.core.value as value
 import time
@@ -151,6 +152,7 @@ def remove_note():
     if note_list:
         note_list.pop()
         note_display.pop()
+        remove_last_note_from_track()
     new_display = ""
     for x in note_display:
         new_display = new_display + x + " | "
@@ -180,6 +182,8 @@ def pretty_note(note: str, oct: str, len: str, acc: str):
     print(ret)
     return ret
 
+track = Track()
+
 #might want to keep a list of the "styled_note", it may be easier to implement editing notes
 #   using this list rather than note_list which is just a list of (frequency, duration) tuples
 def add_note_to_display(styled_note: str):
@@ -187,66 +191,104 @@ def add_note_to_display(styled_note: str):
     note_list_display.configure(text=(note_list_display.cget("text") + note_display[len(note_display)-1] + "  |  "))
 
 def add_A():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_B():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_C():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("C", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_D():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("D", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_E():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("E", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_F():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("F", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
 def add_G():
+    global track
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     add_note_to_display(styled_note)
     add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
     preview_note(note_list)
     print(note_list)
 
-def play():
-    print("called the play function in GUI-test")
-    #fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
-    fluidsynth.init(".\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+def set_track(new_track):
+    global track
+    track = new_track
 
+def remove_last_note_from_track():
+    global track
+    new_track = Track()
+    last_bar = Bar()
+    for x in range(len(track)):
+        #print(track[x])
+        if x < len(track) - 1:
+            new_track.add_bar(track[x])
+        else:
+            last_bar = track[x]
+    #print(new_track)
+    #print(last_bar)
+    new_last_bar = Bar()
+    for x in range(len(last_bar)):
+        #print(last_bar[x][1])
+        if x < len(last_bar) - 1:
+            new_last_bar.place_notes(last_bar[x][2], last_bar[x][1])
+    #print(new_last_bar)
+    new_track.add_bar(new_last_bar)
+    set_track(new_track)
+    print("removed last note from track")
+
+#call this function immediately after add_note_to_list
+def add_note_to_track(note_list, track):
+    #find the note length
     note_len = len_var.get()
 
     match note_len:
@@ -262,12 +304,43 @@ def play():
             note_len = value.quarter
         case 6:
             note_len = value.eighth
-
-    true_note_list = []
-
-    bar = Bar()
-    track = Track()
     
+    #pull the note you just added to so you can add it to the track
+    x = note_list[len(note_list) - 1]
+    temp = Note()
+    temp.channel = 1
+    temp.velocity = 120
+    temp = Note.from_hertz(temp, float(x[0]), 440)
+    track.add_notes(temp, note_len)
+
+
+def play():
+    print("called the play function in GUI-test")
+    #fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+    fluidsynth.init(".\\soundfonts\\FluidR3_GM.sf2", 'dsound')
+    fluidsynth.stop_everything()
+
+    """
+    note_len = len_var.get()
+
+    match note_len:
+        case 1:
+            note_len = value.whole
+        case 2:
+            note_len = value.dots(value.half)
+        case 3:
+            note_len = value.half
+        case 4:
+            note_len = value.dots(value.quarter)
+        case 5:
+            note_len = value.quarter
+        case 6:
+            note_len = value.eighth
+    """
+
+    global track
+    
+    """
     for x in note_list:
         temp = Note()
         temp = Note.from_hertz(temp, float(x[0]), 440)
@@ -281,7 +354,8 @@ def play():
         #    temp_bar = Bar()
         #    bar = temp_bar
         #    bar.place_notes(temp, note_len)
-    
+    """
+
     fluidsynth.play_Track(track, 1, 120)
 
     #playing the notes

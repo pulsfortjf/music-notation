@@ -1,7 +1,9 @@
 import mingus.core.notes as notes
-from mingus.containers import Note, NoteContainer
+import mingus.core.value as value
+from mingus.containers import Note, NoteContainer, Track, Bar
 from mingus.midi import midi_file_out
 from mingus.midi import fluidsynth
+import time
 #import winsound
 #import pygame
 #from pydub import AudioSegment
@@ -30,12 +32,96 @@ def play_music(music_file):
         clock.tick(30)
 """
 
+def track_test():
+    track = Track()
+    c = Note("C-5")
+    c.channel = 1
+    c.velocity = 120
+    e = Note("E-5")
+    e.channel = 1
+    e.velocity = 120
+    g = Note("G-5")
+    g.channel = 1
+    g.velocity = 120
+
+    track.add_notes(c, value.quarter)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.quarter)
+    track.add_notes(c, value.eighth)
+    track.add_notes(c, value.eighth)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.half)
+    track.add_notes(c, value.quarter)
+
+    new_track = Track()
+    last_bar = Bar()
+    for x in range(len(track)):
+        print(track[x])
+        if x < len(track) - 1:
+            new_track.add_bar(track[x])
+        else:
+            last_bar = track[x]
+    print(new_track)
+    print(last_bar)
+    new_last_bar = Bar()
+    for x in range(len(last_bar)):
+        print(last_bar[x][1])
+        if x < len(last_bar) - 1:
+            new_last_bar.place_notes(last_bar[x][2], last_bar[x][1])
+    print(new_last_bar)
+    new_track.add_bar(new_last_bar)
+    print(new_track)
+    track = new_track
+    new_track.add_notes(e, value.quarter)
+    print(new_track)
+    print(track)
 
 def play_test():
-    n = Note("C-5")
-    n.channel = 5
-    n.velocity = 50
-    fluidsynth.play_Note(n)
+    track = Track()
+    c = Note("C-5")
+    c.channel = 1
+    c.velocity = 120
+    e = Note("E-5")
+    e.channel = 1
+    e.velocity = 120
+    g = Note("G-5")
+    g.channel = 1
+    g.velocity = 120
+
+    track.add_notes(c, value.quarter)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.quarter)
+    track.add_notes(c, value.eighth)
+    track.add_notes(c, value.eighth)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.half)
+    track.add_notes(c, value.quarter)
+    #track.add_notes(e, value.whole)
+    #stores the last bar so we can remove the last note and then add the bar back
+    #fluidsynth.play_Track(track, 1, 120)
+    time.sleep(2)
+    last_bar = track[len(track) - 1]
+    print(last_bar)
+    new_track = Track(track[:len(track) - 1])
+    print(len(track))
+    print(f"track: {track}")
+    print(f"track: {track[:len(track) - 1]}")
+    print(f"track: {track[len(track) - 1]}")
+    print(f"last_bar: {last_bar}")
+    print(f"new_track: {new_track}")
+    last_bar = last_bar[0:len(last_bar) - 1]
+    print(f"last_bar: {last_bar}")
+    new_track.add_bar(last_bar)
+    print(f"new_track: {new_track}")
+    #track = Track(new_track)
+    print(f"new_track: {track}")
+    #fluidsynth.play_Note(n)
+    #fluidsynth.play_Track(track, 1, 120)
+    #time.sleep(0.5)
+    track.add_notes(c, value.quarter)
+    print(f"new_track: {track}")
+    time.sleep(0.5)
+    #fluidsynth.play_Track(track, 2, 120)
 
     print("success")
 
@@ -47,15 +133,16 @@ def get_note(notes_list):
 
 def main():
     notes_list = []
-    get_note(notes_list)
+    #get_note(notes_list)
 
     fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.SF2")
 
-    play_test()
+    #play_test()
+    track_test()
     #nc = NoteContainer(["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"])
     #note_list = ["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"]
-    for x in notes_list:
-        midi_file_out.write_Note("test1.mid", Note(x), 120, 3)
+    #for x in notes_list:
+    #    midi_file_out.write_Note("test1.mid", Note(x), 120, 3)
     
     """
     freq = 44100    # audio CD quality
