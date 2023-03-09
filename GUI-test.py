@@ -37,6 +37,7 @@ nat_image = customtkinter.CTkImage(light_image=Image.open(".\\assets\\images\\na
 
 octave = 4
 accidental = "n"
+track = Track()
 
 def octave_1():
     global octave
@@ -149,13 +150,25 @@ def disable_acc_buttons():
 
 #removes last note in the list and prints the list
 def remove_note():
+    global track
     if note_list:
         note_list.pop()
         note_display.pop()
-        remove_last_note_from_track()
+        track = remove_last_note_from_track(track)
     new_display = ""
     for x in note_display:
-        new_display = new_display + x + " | "
+        new_display = new_display + x + "  |  "
+    
+    note_list_display.configure(text=new_display)
+    print(note_list)
+
+def remove_note_from_list():
+    if note_list:
+        note_list.pop()
+        note_display.pop()
+    new_display = ""
+    for x in note_display:
+        new_display = new_display + x + "  |  "
     
     note_list_display.configure(text=new_display)
     print(note_list)
@@ -181,8 +194,6 @@ def pretty_note(note: str, oct: str, len: str, acc: str):
     ret = f"{len} :  {note}{acc}{oct}"
     print(ret)
     return ret
-
-track = Track()
 
 #might want to keep a list of the "styled_note", it may be easier to implement editing notes
 #   using this list rather than note_list which is just a list of (frequency, duration) tuples
@@ -264,18 +275,70 @@ def set_track(new_track):
     global track
     track = new_track
 
+def remove_empty_bars(track):
+    new_track = Track()
+    #print(f"track: {track}")
+    for x in track:
+        #print(x.space_left())
+        if x.space_left() != 1.0:
+            new_track.add_bar(x)
+    #print(new_track)
+
+    #print("removed empty bars")
+    track = new_track
+    return track
+
+def remove_last_note_from_track(track):
+    #get the last bar in the track
+    #remove_empty_bars_test(track)
+    track = remove_empty_bars(track)
+
+    last_bar = track[len(track) - 1]
+    #print(last_bar)
+    last_bar = last_bar[:len(last_bar) - 1]
+    #print(last_bar)
+
+    new_track = Track()
+    #print(track)
+    for x in track:
+        if x != track[len(track) - 1]:
+            new_track.add_bar(x)
+    #print(f"new_track: {new_track}")
+    #print(track)
+    new_track.add_bar(last_bar)
+    #print(new_track)
+
+    print("removed last note")
+    track = new_track
+    return track
+
+"""
 def remove_last_note_from_track():
     global track
     new_track = Track()
     last_bar = Bar()
+
+    list_of_bars = track.bars
+    if list_of_bars:
+        curr_bar = list_of_bars[len(list_of_bars) - 1]
+        last_bar = curr_bar
+        print(f"curr_bar before removing note: {last_bar}")
+    else:
+        print("curr_bar before adding note: []")
+    
+    print(f"len(track.bars): {len(track.bars)}")
+    print(f"track.bars: {track.bars}")
+
     for x in range(len(track)):
         #print(track[x])
+        print(f"x: {x}")
         if x < len(track) - 1:
             new_track.add_bar(track[x])
-        else:
-            last_bar = track[x]
-    #print(new_track)
-    #print(last_bar)
+        #else:
+        #    last_bar = track[x]
+        
+    print(f"new_track: {new_track}")
+    print(f"last_bar: {last_bar}")
     new_last_bar = Bar()
     for x in range(len(last_bar)):
         #print(last_bar[x][1])
@@ -285,11 +348,18 @@ def remove_last_note_from_track():
     new_track.add_bar(new_last_bar)
     set_track(new_track)
     print("removed last note from track")
+"""
 
 #call this function immediately after add_note_to_list
 def add_note_to_track(note_list, track):
     #find the note length
     note_len = len_var.get()
+    list_of_bars = track.bars
+    if list_of_bars and not list_of_bars[len(list_of_bars) - 1].is_full():
+        curr_bar = list_of_bars[len(list_of_bars) - 1]
+        print(f"curr_bar before adding note: {curr_bar}")
+    else:
+        print("curr_bar before adding note: []")
 
     match note_len:
         case 1:
@@ -311,7 +381,10 @@ def add_note_to_track(note_list, track):
     temp.channel = 1
     temp.velocity = 120
     temp = Note.from_hertz(temp, float(x[0]), 440)
-    track.add_notes(temp, note_len)
+    if not track.add_notes(temp, note_len):
+        print("note will not fit in current bar, note not added")
+        remove_note_from_list()
+        
 
 
 def play():

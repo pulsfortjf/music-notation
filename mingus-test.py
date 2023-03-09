@@ -32,6 +32,95 @@ def play_music(music_file):
         clock.tick(30)
 """
 
+def space_test():
+    b = Bar()
+    #when called on an empty bar, space_left() returns 1.0
+    print(b.space_left())
+    b.place_notes("A-4", 4)
+    print(b.space_left())
+    b.place_notes("A-4", 4)
+    print(b.space_left())
+    b.place_notes("A-4", 4)
+    print(b.space_left())
+    b.place_notes("A-4", 4)
+    print(b.space_left())
+
+def set_track(track, new_track):
+    track = new_track
+
+#remove any empty bars from the end of the track and return the new track
+def remove_empty_bars(track: Track):
+    new_track = Track()
+    #print(f"track: {track}")
+    for x in track:
+        #print(x.space_left())
+        if x.space_left() != 1.0:
+            new_track.add_bar(x)
+    #print(new_track)
+
+    #print("removed empty bars")
+    return new_track
+
+def remove_last_note_from_track(track):
+    #get the last bar in the track
+    #remove_empty_bars_test(track)
+    track = remove_empty_bars(track)
+
+    last_bar = track[len(track) - 1]
+    #print(last_bar)
+    last_bar = last_bar[:len(last_bar) - 1]
+    #print(last_bar)
+
+    new_track = Track()
+    #print(track)
+    for x in track:
+        if x != track[len(track) - 1]:
+            new_track.add_bar(x)
+    #print(f"new_track: {new_track}")
+    #print(track)
+    new_track.add_bar(last_bar)
+    #print(new_track)
+
+    print("removed last note")
+    return new_track
+
+def track_test_2():
+    track = Track()
+    c = Note("C-5")
+    c.channel = 1
+    c.velocity = 120
+    e = Note("E-5")
+    e.channel = 1
+    e.velocity = 120
+    g = Note("G-5")
+    g.channel = 1
+    g.velocity = 120
+
+    # Measure 1
+    track.add_notes(c, value.quarter)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.quarter)
+    track.add_notes(c, value.eighth)
+    track.add_notes(c, value.eighth)
+
+    # Measure 2
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.quarter)
+    track.add_notes(c, value.quarter)
+    #track.add_notes(g, value.half)
+    track.add_notes(e, value.quarter)
+
+    b = Bar()
+    track.add_bar(b)
+
+    print(f"track before removing note: {track}")
+    
+    track = remove_last_note_from_track(track)
+    print(f"track after removing note: {track}")
+    #remove_last_note_from_track(track)
+    
+    print("done")
+
 def track_test():
     track = Track()
     c = Note("C-5")
@@ -138,7 +227,10 @@ def main():
     fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.SF2")
 
     #play_test()
-    track_test()
+    #track_test()
+    track_test_2()
+    #space_test()
+
     #nc = NoteContainer(["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"])
     #note_list = ["A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4", "A-4", "C-4", "E-4"]
     #for x in notes_list:
