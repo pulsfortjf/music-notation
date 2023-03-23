@@ -292,6 +292,7 @@ def remove_last_note_from_track(track):
     #get the last bar in the track
     #remove_empty_bars_test(track)
     track = remove_empty_bars(track)
+    print(len(track))
 
     last_bar = track[len(track) - 1]
     #print(last_bar)
@@ -305,7 +306,7 @@ def remove_last_note_from_track(track):
             new_track.add_bar(x)
     #print(f"new_track: {new_track}")
     #print(track)
-    new_track.add_bar(last_bar)
+    new_track.add_bar(Bar(last_bar))
     #print(new_track)
 
     print("removed last note")
@@ -428,8 +429,13 @@ def play():
         #    bar = temp_bar
         #    bar.place_notes(temp, note_len)
     """
+    tempo = get_tempo()
+    try:
+        tempo_num = int(tempo)
+    except:
+        tempo_num = 120
 
-    fluidsynth.play_Track(track, 1, 120)
+    fluidsynth.play_Track(track, 1, tempo_num)
 
     #playing the notes
     #for x in true_note_list:
