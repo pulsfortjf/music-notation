@@ -14,12 +14,14 @@ customtkinter.set_appearance_mode("System")  # Modes: system (default), light, d
 customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("600x400")
+app.geometry("1000x500")
 app.resizable(True, True)
 
 accidental_font = customtkinter.CTkFont(family="system-ui", size=20, weight="bold")
 
 note_font = customtkinter.CTkFont(family="sans-serif", size=15, weight="bold")
+
+clef_font = customtkinter.CTkFont(family="sans-serif", size=30, weight="bold")
 
 """
 flat_image = customtkinter.CTkImage(light_image=Image.open(".\\assets\\images\\flat_accidental.png"),
@@ -91,7 +93,7 @@ def get_octave():
     if not octave:
         octave = 4
     print(octave)
-    return octave
+    return int(octave)
 
 def len_button_event():
     print("length button toggled, current value:", len_var.get())
@@ -209,7 +211,17 @@ def add_A():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
+    print(note_list)
+
+def add_A_1():
+    global track
+    print("called the add_note function in GUI-test")
+    styled_note = pretty_note("A", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
+    add_note_to_list(str(f"A, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
+    #preview_note(note_list)
     print(note_list)
 
 def add_B():
@@ -219,7 +231,17 @@ def add_B():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
+    print(note_list)
+
+def add_B_1():
+    global track
+    print("called the add_note function in GUI-test")
+    styled_note = pretty_note("B", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
+    add_note_to_list(str(f"B, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
+    #preview_note(note_list)
     print(note_list)
 
 def add_C():
@@ -229,7 +251,7 @@ def add_C():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
     print(note_list)
 
 def add_D():
@@ -239,7 +261,7 @@ def add_D():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
     print(note_list)
 
 def add_E():
@@ -249,7 +271,7 @@ def add_E():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
     print(note_list)
 
 def add_F():
@@ -259,7 +281,7 @@ def add_F():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
     print(note_list)
 
 def add_G():
@@ -269,7 +291,17 @@ def add_G():
     add_note_to_display(styled_note)
     add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
     add_note_to_track(note_list, track)
-    preview_note(note_list)
+    #preview_note(note_list)
+    print(note_list)
+
+def add_G_1():
+    global track
+    print("called the add_note function in GUI-test")
+    styled_note = pretty_note("G", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
+    add_note_to_display(styled_note)
+    add_note_to_list(str(f"G, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+    add_note_to_track(note_list, track)
+    #preview_note(note_list)
     print(note_list)
 
 def set_track(new_track):
@@ -400,8 +432,13 @@ def add_note_to_track(note_list, track):
     temp.velocity = 120
     temp = Note.from_hertz(temp, float(x[0]), 440)
     if not track.add_notes(temp, note_len):
-        print("note will not fit in current bar, note not added")
+        preview_note(note_list)
+        note_add_warning.configure(text="Error:\nNot enough space in the\ncurrent bar for that note,\nthe note was not added.")
         remove_note_from_list()
+        return
+    else:
+        note_add_warning.configure(text="")
+    preview_note(note_list)
         
 
 
@@ -555,6 +592,52 @@ len_button_6.place(x=450, y=90)
 
 note_list_display=customtkinter.CTkLabel(master=app, font=note_font, text="")
 note_list_display.place(x=200, y=130)
+
+note_add_warning=customtkinter.CTkLabel(master=app, font=note_font, justify="left",
+                                        text="")
+note_add_warning.place(relx=0.8, rely=0.05)
+
+bass_clef=customtkinter.CTkLabel(master=app, font=clef_font, justify="left",
+                                        text="BASS\nCLEF")
+bass_clef.place(x=200, y=260)
+
+a_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_A, height=1,
+                                 fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
+a_line.place(x=300, y=200)
+
+g_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_G, height=10, width=405,
+                                 fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
+g_space.place(x=300, y=220)
+
+f_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_F, height=1,
+                                 fg_color="transparent", hover=False, border_width=0, font=note_font)
+f_line.place(x=300, y=240)
+
+e_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_E, height=10, width=405,
+                                 fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
+e_space.place(x=300, y=260)
+
+d_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_D, height=1,
+                                 fg_color="transparent", hover=False, border_width=0, font=note_font)
+d_line.place(x=300, y=280)
+
+c_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_C, height=10, width=405,
+                                 fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
+c_space.place(x=300, y=300)
+
+b_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_B_1, height=1,
+                                 fg_color="transparent", hover=False, border_width=0, font=note_font)
+b_line.place(x=300, y=320)
+
+a_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_A_1, height=10, width=405,
+                                 fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
+a_space.place(x=300, y=340)
+
+g_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_G_1, height=1,
+                                 fg_color="transparent", hover=False, border_width=0, font=note_font)
+g_line.place(x=300, y=360)
+
+
 
 """
 #these buttons will need a custom font before I can have music notes displayed on them
