@@ -53,7 +53,7 @@ def remove_empty_bars(track: Track):
     new_track = Track()
     #print(f"track: {track}")
     for x in track:
-        #print(x.space_left())
+        print(x.space_left())
         if x.space_left() != 1.0:
             new_track.add_bar(x)
     #print(new_track)
@@ -84,6 +84,19 @@ def remove_last_note_from_track(track):
     print("removed last note")
     return new_track
 
+def new_remove_note(track: Track):
+    #first find the last bar in the track
+    track = remove_empty_bars(track)
+    print(track)
+    bars_list = track.bars
+    last_bar = bars_list[len(bars_list) - 1]
+    print(last_bar)
+    last_bar.remove_last_entry()
+    print(last_bar)
+    track[len(track) - 1] = last_bar
+    print(track)
+    return track
+
 def track_test_2():
     track = Track()
     c = Note("C-5")
@@ -110,13 +123,41 @@ def track_test_2():
     #track.add_notes(g, value.half)
     track.add_notes(e, value.quarter)
 
-    b = Bar()
-    track.add_bar(b)
+    # Measure 3
+    track.add_notes(c, value.quarter)
+    track.add_notes(e, value.quarter)
+    track.add_notes(g, value.quarter)
+    track.add_notes(c, value.eighth)
+    track.add_notes(c, value.eighth)
 
-    print(f"track before removing note: {track}")
+    # Measure 4
+    track.add_notes(c, value.quarter)
+    track.add_notes(e, value.quarter)
+
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+    track = new_remove_note(track)
+
+    #b = Bar()
+    #track.add_bar(b)
+
+    #print(f"track before removing note: {track}")
     
-    track = remove_last_note_from_track(track)
-    print(f"track after removing note: {track}")
+    #track = remove_last_note_from_track(track)
+    #print(f"track after removing note: {track}")
     #remove_last_note_from_track(track)
     
     print("done")
@@ -224,7 +265,8 @@ def main():
     notes_list = []
     #get_note(notes_list)
 
-    fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.SF2")
+    #fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.SF2")
+    fluidsynth.init(".\\soundfonts\\FluidR3_GM.sf2", 'dsound')
 
     #play_test()
     #track_test()

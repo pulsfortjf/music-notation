@@ -154,7 +154,8 @@ def remove_note():
     if note_list:
         note_list.pop()
         note_display.pop()
-        track = remove_last_note_from_track(track)
+        #track = remove_last_note_from_track(track)
+        track = new_remove_note(track)
     new_display = ""
     for x in note_display:
         new_display = new_display + x + "  |  "
@@ -288,10 +289,25 @@ def remove_empty_bars(track):
     track = new_track
     return track
 
+def new_remove_note(track: Track):
+    #first find the last bar in the track
+    track = remove_empty_bars(track)
+    #print(track)
+    bars_list = track.bars
+    last_bar = bars_list[len(bars_list) - 1]
+    #print(last_bar)
+    last_bar.remove_last_entry()
+    #print(last_bar)
+    track[len(track) - 1] = last_bar
+    #print(track)
+    return track
+
+"""
 def remove_last_note_from_track(track):
     #get the last bar in the track
     #remove_empty_bars_test(track)
     track = remove_empty_bars(track)
+    print(track)
     print(len(track))
 
     last_bar = track[len(track) - 1]
@@ -312,7 +328,8 @@ def remove_last_note_from_track(track):
     print("removed last note")
     track = new_track
     return track
-
+"""
+    
 """
 def remove_last_note_from_track():
     global track
