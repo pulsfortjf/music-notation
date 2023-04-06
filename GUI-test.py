@@ -205,102 +205,132 @@ def add_note_to_display(styled_note: str):
     note_list_display.configure(text=(note_list_display.cget("text") + note_display[len(note_display)-1] + "  |  "))
 
 def add_A():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"A, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("A", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_A_1():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"A, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"A, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("A", get_octave() - 1, get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_B():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"B, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("B", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_B_1():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"B, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"B, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("B", get_octave() - 1, get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_C():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("C", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"C, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("C", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_D():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("D", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"D, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("D", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_E():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("E", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"E, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("E", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_F():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("F", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"F, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("F", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_G():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"G, {get_octave()}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("G", get_octave(), get_accidental())
     #preview_note(note_list)
     print(note_list)
 
 def add_G_1():
-    global track
+    global track, editing
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
-    add_note_to_display(styled_note)
-    add_note_to_list(str(f"G, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
-    add_note_to_track(note_list, track)
+    if not editing:
+        add_note_to_display(styled_note)
+        add_note_to_list(str(f"G, {get_octave() - 1}, {get_note_len()}, {get_accidental()}"), note_list)
+        add_note_to_track(note_list, track)
+    else:
+        edit_note("G", get_octave() - 1, get_accidental())
     #preview_note(note_list)
     print(note_list)
 
@@ -333,6 +363,148 @@ def new_remove_note(track: Track):
     track[len(track) - 1] = last_bar
     #print(track)
     return track
+
+def left_arrow():
+    #use the arrows first to select a bar in the track, then to select a note in that bar
+    global curr_note_index, track, curr_bar_index, selected_bar
+    if selected_bar:
+        curr_bar = track.bars[curr_bar_index]
+        selected_bar = curr_bar
+        if curr_note_index > len(curr_bar.bar) - 1:
+            curr_note_index = len(curr_bar.bar) - 1
+        #notes = curr_bar
+        #notes_list = []
+        if curr_note_index > 0:
+            curr_note_index -= 1
+            print(f"Note at Index {curr_note_index} In Bar {curr_bar_index}: {curr_bar[curr_note_index]}")
+        else:
+            print(f"Note at Index {curr_note_index} In Bar {curr_bar_index}: {curr_bar[curr_note_index]}")
+    else:
+        if curr_bar_index > 0:
+            curr_bar_index -= 1
+            print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
+        else:
+            print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
+
+def right_arrow():
+    global curr_note_index, track, curr_bar_index, selected_bar
+    if selected_bar:
+        curr_bar = track.bars[curr_bar_index]
+        selected_bar = curr_bar
+        #notes = curr_bar
+        #notes_list = []
+        if curr_note_index > len(curr_bar.bar) - 1:
+            curr_note_index = len(curr_bar.bar) - 1
+        if curr_note_index < len(curr_bar.bar) - 1:
+            curr_note_index += 1
+            print(f"Note at Index {curr_note_index} In Bar {curr_bar_index}: {curr_bar[curr_note_index]}")
+        else:
+            print(f"Note at Index {curr_note_index} In Bar {curr_bar_index}: {curr_bar[curr_note_index]}")
+    else:
+        if curr_bar_index < len(track.bars) - 1:
+            curr_bar_index += 1
+            print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
+        else:
+            print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
+
+    """
+    global curr_note_index, track
+    notes = track.get_notes()
+    notes_list = []
+    for x in notes:
+        notes_list.append(x)
+    if notes_list:
+        if curr_note_index < len(notes_list) - 1:
+            curr_note_index += 1
+            print(f"Note at Index {curr_note_index}: {notes_list[curr_note_index]}")
+    """
+
+def select_bar():
+    global selected_bar
+    selected_bar = True
+
+def deselect_bar():
+    global selected_bar
+    selected_bar = False
+
+def select_note():
+    global track, curr_note_index, curr_bar_index, editing
+    curr_bar = track.bars[curr_bar_index]
+    
+    print(curr_note_index)
+    print(curr_bar[curr_note_index])
+    editing = True
+
+def edit_note(note_name, octave, accidental):
+    global track, curr_note_index, curr_bar_index, editing, full_note_index
+
+    print(value.dots(value.half))
+    print(value.dots(value.quarter))
+
+    notes_in_track = []
+    for x in track.get_notes():
+        notes_in_track.append(x)
+
+    curr_bar = track.bars[curr_bar_index]
+    note = curr_bar[curr_note_index]
+    
+    #add up all notes in previous bars as well as the notes that come before the curr_note_index
+    #in the current bar, this will give you the position of the note in the track
+    index = 0
+    bars = track.bars
+    for i in range(len(bars)):
+        #i is a bar
+        for j in bars[i]:
+            #j is a note
+            if i == curr_bar_index and bars[i].bar.index(j) == curr_note_index:
+                break
+            else:
+                index += 1
+    
+    print(f"index of the note: {index}")
+    full_note_index = index
+
+    print(note)
+    #note[1] is the note length, set this to note_len
+    note_len = note[1]
+
+    note_len_str = ""
+    match note_len:
+        case 1:
+            note_len_str = "wh_"
+        case 1.3333333333333333:
+            note_len_str = "ha."
+        case 2:
+            note_len_str = "ha_"
+        case 2.6666666666666665:
+            note_len_str = "qu."
+        case 4:
+            note_len_str = "qu_"
+        case 8:
+            note_len_str = "ei_"
+
+    #get the name of the note with the accidental attached
+    if accidental != "n":
+        temp = Note(note_name + accidental, octave, velocity=120)
+    else:
+        temp = Note(note_name, octave, velocity=120)
+    
+    curr_bar[curr_note_index] = temp
+    track[curr_bar_index] = curr_bar
+    styled_note = pretty_note(note_name, octave, note_len_str, accidental)
+    edit_display(styled_note)
+    editing = False
+
+def edit_display(styled_note):
+    global full_note_index, track, note_display
+    note_display[full_note_index] = styled_note
+    
+    #now redo the display so that the note change applies
+    new_display = ""
+    for x in note_display:
+        new_display += x + "  |  "
+
+    note_list_display.configure(text=new_display)
 
 """
 def remove_last_note_from_track(track):
@@ -507,6 +679,12 @@ note_list = []
 note_display = []
 len_var = tkinter.IntVar(app, 5)
 acc_var = tkinter.IntVar(app, 3)
+curr_note_index = 0
+selected_bar = False
+curr_bar_index = 0
+editing = False
+#the index of the note in the full track, used to edit the display string
+full_note_index = 0
 
 play_button = customtkinter.CTkButton(master=app, text="Play", command=play)
 play_button.place(x=20, y=10)
@@ -530,6 +708,21 @@ octave_entry = customtkinter.CTkEntry(master=app,
                                placeholder_text="Enter a new Octave",
                                corner_radius=5)
 octave_entry.place(x=20, y=170)
+
+edit_button = customtkinter.CTkButton(master=app, text="Edit Note", command=select_note)
+edit_button.place(x=20, y=210)
+
+select_bar_button = customtkinter.CTkButton(master=app, text="Select Bar", command=select_bar)
+select_bar_button.place(x=20, y=250)
+
+deselect_bar_button = customtkinter.CTkButton(master=app, text="Deselect Bar", command=deselect_bar)
+deselect_bar_button.place(x=20, y=290)
+
+left_button = customtkinter.CTkButton(master=app, text="←", width=65, font=accidental_font, command=left_arrow)
+left_button.place(x=20, y=330)
+
+right_button = customtkinter.CTkButton(master=app, text="→", width=65, font=accidental_font, command=right_arrow)
+right_button.place(x=95, y=330)
 
 A_button = customtkinter.CTkButton(master=app, text="A", command=add_A, width=40)
 A_button.place(x=200, y=10)
