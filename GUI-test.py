@@ -1,25 +1,29 @@
 import tkinter
 import customtkinter
-import winsound
-from PIL import Image
 from main import *
 import mingus.core.notes as notes
 from mingus.containers import Note, Track, Bar, NoteContainer
 from mingus.containers.instrument import MidiInstrument as mi
 from mingus.midi import fluidsynth
 import mingus.core.value as value
-import time
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("2000x900")
-app.resizable(True, True)
+width = app.winfo_screenwidth()
+height = app.winfo_screenheight()
+print(width, height)
+app.title("MEscore")
+app.geometry(f"{width}x{height}")
+#app.resizable(True, True)
+app.resizable(False, True)
 
 accidental_font = customtkinter.CTkFont(family="system-ui", size=20, weight="bold")
 
-note_font = customtkinter.CTkFont(family="sans-serif", size=15, weight="bold")
+len_font = customtkinter.CTkFont(family="sans-serif", size=16, weight="bold")
+
+note_font = customtkinter.CTkFont(family="sans-serif", size=14, weight="bold")
 
 clef_font = customtkinter.CTkFont(family="sans-serif", size=30, weight="bold")
 
@@ -136,10 +140,11 @@ def remove_note():
         note_count -= 1
         #track = remove_last_note_from_track(track)
         track = new_remove_note(track)
-    new_display = ""
-    for x in note_display:
-        new_display = new_display + x + "  |  "
+    #new_display = ""
+    #for x in note_display:
+    #    new_display = new_display + x + "  |  "
     
+    new_display = note_display
     note_list_display.configure(text=new_display)
     print(note_list)
 
@@ -176,23 +181,16 @@ def pretty_note(note: str, oct: str, len: str, acc: str):
     print(ret)
     return ret
 
-#might want to keep a list of the "styled_note", it may be easier to implement editing notes
-#   using this list rather than note_list which is just a list of (frequency, duration) tuples
-def add_note_to_display(styled_note: str):
-    global note_count, buffer
-    if note_count % 4 == 1 and note_count != 1:
-        buffer += 1
-        print(f"buffer: {buffer}")
-    note_display.append(styled_note)
-    if note_count % 4 == 1 and note_count != 1: 
-        note_list_display.configure(text=(note_list_display.cget("text") + "\n" + note_display[len(note_display)-1] + "  |  "))
-        update_staff()
-    else:
-        note_list_display.configure(text=(note_list_display.cget("text") + note_display[len(note_display)-1] + "  |  "))
+def display_note_count():
+    global note_count, note_count_label, buffer
+    #note_count_label.configure(text=f"note count: {note_count}\nbuffer: {buffer * 20}")
+    note_count_label.configure(text="")
 
-def add_A():
-    global track, editing, note_count
+def update_note_count():
+    global note_count
     note_len = get_note_len()
+    note_count += 1
+    """
     match note_len:
         case "wh_":
             note_count += 4
@@ -206,7 +204,25 @@ def add_A():
             note_count += 1
         case "ei_":
             note_count += 0.5
-    print(f"note_count {note_count}")
+    """
+
+#might want to keep a list of the "styled_note", it may be easier to implement editing notes
+#   using this list rather than note_list which is just a list of (frequency, duration) tuples
+def add_note_to_display(styled_note: str):
+    global note_count, buffer
+    if (note_count % 12) == 0 and note_count != 0:
+        buffer += 1
+        print(f"buffer: {buffer}")
+    note_display.append(styled_note)
+    if (note_count % 12) == 0 and note_count != 0: 
+        note_list_display.configure(text=(note_list_display.cget("text") + "\n" + note_display[len(note_display)-1] + "  |  "))
+        update_staff()
+    else:
+        note_list_display.configure(text=(note_list_display.cget("text") + note_display[len(note_display)-1] + "  |  "))
+    #display_note_count()
+
+def add_A():
+    global track, editing, note_count
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -215,25 +231,12 @@ def add_A():
         add_note_to_track(note_list, track)
     else:
         edit_note("A", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_A_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -242,25 +245,12 @@ def add_A_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("A", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_A_2():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("A", f"{get_octave() - 2}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -269,25 +259,12 @@ def add_A_2():
         add_note_to_track(note_list, track)
     else:
         edit_note("A", get_octave() - 2, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_B():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -296,25 +273,12 @@ def add_B():
         add_note_to_track(note_list, track)
     else:
         edit_note("B", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_B_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -323,25 +287,12 @@ def add_B_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("B", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_B_2():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("B", f"{get_octave() - 2}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -350,25 +301,12 @@ def add_B_2():
         add_note_to_track(note_list, track)
     else:
         edit_note("B", get_octave() - 2, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_C_t():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("C", f"{get_octave() + 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -377,25 +315,12 @@ def add_C_t():
         add_note_to_track(note_list, track)
     else:
         edit_note("C", get_octave() + 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_C():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("C", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -404,25 +329,12 @@ def add_C():
         add_note_to_track(note_list, track)
     else:
         edit_note("C", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_C_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("C", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -431,25 +343,12 @@ def add_C_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("C", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_D_t():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("D", f"{get_octave() + 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -458,25 +357,12 @@ def add_D_t():
         add_note_to_track(note_list, track)
     else:
         edit_note("D", get_octave() + 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_D():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("D", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -485,25 +371,12 @@ def add_D():
         add_note_to_track(note_list, track)
     else:
         edit_note("D", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_D_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("D", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -512,25 +385,12 @@ def add_D_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("D", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_E_t():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("E", f"{get_octave() + 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -539,25 +399,12 @@ def add_E_t():
         add_note_to_track(note_list, track)
     else:
         edit_note("E", get_octave() + 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_E():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("E", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -566,25 +413,12 @@ def add_E():
         add_note_to_track(note_list, track)
     else:
         edit_note("E", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_E_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("E", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -593,25 +427,12 @@ def add_E_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("E", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_F_t():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("F", f"{get_octave() + 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -620,25 +441,12 @@ def add_F_t():
         add_note_to_track(note_list, track)
     else:
         edit_note("F", get_octave() + 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_F():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("F", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -647,12 +455,12 @@ def add_F():
         add_note_to_track(note_list, track)
     else:
         edit_note("F", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_F_1():
     global track, editing, note_count
-    note_count += 1
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("F", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -661,25 +469,12 @@ def add_F_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("F", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_G_t():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave() + 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -688,25 +483,12 @@ def add_G_t():
         add_note_to_track(note_list, track)
     else:
         edit_note("G", get_octave() + 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_G():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave()}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -715,25 +497,12 @@ def add_G():
         add_note_to_track(note_list, track)
     else:
         edit_note("G", get_octave(), get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_G_1():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave() - 1}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -742,25 +511,12 @@ def add_G_1():
         add_note_to_track(note_list, track)
     else:
         edit_note("G", get_octave() - 1, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
 def add_G_2():
     global track, editing, note_count
-    note_len = get_note_len()
-    match note_len:
-        case "wh_":
-            note_count += 4
-        case "ha.":
-            note_count += 3
-        case "ha_":
-            note_count += 2
-        case "qu.":
-            note_count += 1.5
-        case "qu_":
-            note_count += 1
-        case "ei_":
-            note_count += 0.5
     print("called the add_note function in GUI-test")
     styled_note = pretty_note("G", f"{get_octave() - 2}", f"{get_note_len()}", f"{get_accidental()}")
     if not editing:
@@ -769,6 +525,7 @@ def add_G_2():
         add_note_to_track(note_list, track)
     else:
         edit_note("G", get_octave() - 2, get_accidental())
+    update_note_count()
     #preview_note(note_list)
     print(note_list)
 
@@ -844,18 +601,6 @@ def right_arrow():
             print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
         else:
             print(f"Bar at Index {curr_bar_index}: {track.bars[curr_bar_index]}")
-
-    """
-    global curr_note_index, track
-    notes = track.get_notes()
-    notes_list = []
-    for x in notes:
-        notes_list.append(x)
-    if notes_list:
-        if curr_note_index < len(notes_list) - 1:
-            curr_note_index += 1
-            print(f"Note at Index {curr_note_index}: {notes_list[curr_note_index]}")
-    """
 
 def select_bar():
     global selected_bar
@@ -934,13 +679,23 @@ def edit_note(note_name, octave, accidental):
     editing = False
 
 def edit_display(styled_note):
-    global full_note_index, track, note_display
+    global full_note_index, track, note_display, note_count, buffer
     note_display[full_note_index] = styled_note
     
     #now redo the display so that the note change applies
     new_display = ""
+    note_count = 0
     for x in note_display:
-        new_display += x + "  |  "
+        if (note_count % 12) == 0 and note_count != 0:
+            buffer += 1
+            print(f"buffer: {buffer}")
+        if (note_count % 12) == 0 and note_count != 0: 
+            new_display+= "\n" + x + "  |  "
+            update_note_count()
+            update_staff()
+        else:
+            new_display += x + "  |  "
+            update_note_count()
 
     note_list_display.configure(text=new_display)
 
@@ -970,72 +725,6 @@ def update_staff():
     b_line.place(x=300, y=540 + (buffer * 20))
     a_space.place(x=300, y=560 + (buffer * 20))
     g_line.place(x=300, y=580 + (buffer * 20))
-
-"""
-def remove_last_note_from_track(track):
-    #get the last bar in the track
-    #remove_empty_bars_test(track)
-    track = remove_empty_bars(track)
-    print(track)
-    print(len(track))
-
-    last_bar = track[len(track) - 1]
-    #print(last_bar)
-    last_bar = last_bar[:len(last_bar) - 1]
-    #print(last_bar)
-
-    new_track = Track()
-    #print(track)
-    for x in track:
-        if x != track[len(track) - 1]:
-            new_track.add_bar(x)
-    #print(f"new_track: {new_track}")
-    #print(track)
-    new_track.add_bar(Bar(last_bar))
-    #print(new_track)
-
-    print("removed last note")
-    track = new_track
-    return track
-"""
-    
-"""
-def remove_last_note_from_track():
-    global track
-    new_track = Track()
-    last_bar = Bar()
-
-    list_of_bars = track.bars
-    if list_of_bars:
-        curr_bar = list_of_bars[len(list_of_bars) - 1]
-        last_bar = curr_bar
-        print(f"curr_bar before removing note: {last_bar}")
-    else:
-        print("curr_bar before adding note: []")
-    
-    print(f"len(track.bars): {len(track.bars)}")
-    print(f"track.bars: {track.bars}")
-
-    for x in range(len(track)):
-        #print(track[x])
-        print(f"x: {x}")
-        if x < len(track) - 1:
-            new_track.add_bar(track[x])
-        #else:
-        #    last_bar = track[x]
-        
-    print(f"new_track: {new_track}")
-    print(f"last_bar: {last_bar}")
-    new_last_bar = Bar()
-    for x in range(len(last_bar)):
-        #print(last_bar[x][1])
-        if x < len(last_bar) - 1:
-            new_last_bar.place_notes(last_bar[x][2], last_bar[x][1])
-    #print(new_last_bar)
-    new_track.add_bar(new_last_bar)
-    set_track(new_track)
-    print("removed last note from track")
-"""
 
 #call this function immediately after add_note_to_list
 def add_note_to_track(note_list, track):
@@ -1084,42 +773,7 @@ def play():
     #fluidsynth.init("D:\\Capstone\\repos\\capstone-prototype\\capstone-prototype\\soundfonts\\FluidR3_GM.sf2", 'dsound')
     fluidsynth.init(".\\soundfonts\\FluidR3_GM.sf2", 'dsound')
     fluidsynth.stop_everything()
-
-    """
-    note_len = len_var.get()
-
-    match note_len:
-        case 1:
-            note_len = value.whole
-        case 2:
-            note_len = value.dots(value.half)
-        case 3:
-            note_len = value.half
-        case 4:
-            note_len = value.dots(value.quarter)
-        case 5:
-            note_len = value.quarter
-        case 6:
-            note_len = value.eighth
-    """
-
     global track
-    
-    """
-    for x in note_list:
-        temp = Note()
-        temp = Note.from_hertz(temp, float(x[0]), 440)
-        track.add_notes(temp, note_len)
-        #if bar.current_beat != bar.length:
-        #    bar.place_notes(temp, note_len)
-
-            #true_note_list.append(temp)
-        #else:
-        #    track.add_bar(bar)
-        #    temp_bar = Bar()
-        #    bar = temp_bar
-        #    bar.place_notes(temp, note_len)
-    """
     tempo = get_tempo()
     try:
         tempo_num = int(tempo)
@@ -1127,18 +781,6 @@ def play():
         tempo_num = 120
 
     fluidsynth.play_Track(track, 1, tempo_num)
-
-    #playing the notes
-    #for x in true_note_list:
-    #    fluidsynth.play_Note(x)
-    #    time.sleep(0.1)
-    
-    #for x in note_list:
-    #    winsound.Beep(int(x[0]), x[1])
-
-# Use CTkButton instead of tkinter Button
-#button = customtkinter.CTkButton(master=app, text="CTkButton", command=button_function)
-#button.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
 note_list = []
 note_display = []
@@ -1230,17 +872,17 @@ nat_button = customtkinter.CTkRadioButton(master=app, text="♮", font=accidenta
                                             command=acc_button_event, variable= acc_var, value=3)
 nat_button.place(x=300, y=50, width=103)
 
-len_button_1 = customtkinter.CTkRadioButton(master=app, text="W", font=note_font,
+len_button_1 = customtkinter.CTkRadioButton(master=app, text="W", font=len_font,
                                              command=len_button_event, variable= len_var, value=1)
-len_button_2 = customtkinter.CTkRadioButton(master=app, text="H.", font=note_font,
+len_button_2 = customtkinter.CTkRadioButton(master=app, text="H.", font=len_font,
                                              command=len_button_event, variable= len_var, value=2)
-len_button_3 = customtkinter.CTkRadioButton(master=app, text="H", font=note_font,
+len_button_3 = customtkinter.CTkRadioButton(master=app, text="H", font=len_font,
                                              command=len_button_event, variable= len_var, value=3)
-len_button_4 = customtkinter.CTkRadioButton(master=app, text="Q.", font=note_font,
+len_button_4 = customtkinter.CTkRadioButton(master=app, text="Q.", font=len_font,
                                              command=len_button_event, variable= len_var, value=4)
-len_button_5 = customtkinter.CTkRadioButton(master=app, text="Q", font=note_font,
+len_button_5 = customtkinter.CTkRadioButton(master=app, text="Q", font=len_font,
                                              command=len_button_event, variable= len_var, value=5)
-len_button_6 = customtkinter.CTkRadioButton(master=app, text="E", font=note_font,
+len_button_6 = customtkinter.CTkRadioButton(master=app, text="E", font=len_font,
                                              command=len_button_event, variable= len_var, value=6)
 
 len_button_1.place(x=200, y=90)
@@ -1250,108 +892,112 @@ len_button_4.place(x=350, y=90)
 len_button_5.place(x=400, y=90)
 len_button_6.place(x=450, y=90)
 
-note_list_display=customtkinter.CTkLabel(master=app, font=note_font, text="")
+note_list_display=customtkinter.CTkLabel(master=app, font=note_font, text="", justify="left")
 note_list_display.place(x=200, y=130)
 
 note_add_warning=customtkinter.CTkLabel(master=app, font=note_font, justify="left",
                                         text="")
 note_add_warning.place(relx=0.8, rely=0.05)
 
+note_count_label=customtkinter.CTkLabel(master=app, font=note_font, justify="left",
+                                        text="")#text="note count")
+note_count_label.place(relx=0.85, rely=0.05)
+
 treble_clef=customtkinter.CTkLabel(master=app, font=clef_font, justify="right", width=120,
                                         text="TREBLE\nCLEF")
-treble_clef.place(x=180, y=260 + (buffer * 100))
+treble_clef.place(x=180, y=260 + (buffer * 20))
 
 bass_clef=customtkinter.CTkLabel(master=app, font=clef_font, justify="right", width=120,
                                         text="BASS\nCLEF")
-bass_clef.place(x=200, y=460 + (buffer * 100))
+bass_clef.place(x=200, y=460 + (buffer * 20))
 
 t_g_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_G_t, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-t_g_space.place(x=300, y=160 + (buffer * 100))
+t_g_space.place(x=300, y=160 + (buffer * 20))
 
 t_f_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_F_t, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-t_f_line.place(x=300, y=180 + (buffer * 100))
+t_f_line.place(x=300, y=180 + (buffer * 20))
 
 t_e_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_E_t, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-t_e_space.place(x=300, y=200 + (buffer * 100))
+t_e_space.place(x=300, y=200 + (buffer * 20))
 
 t_d_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_D_t, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-t_d_line.place(x=300, y=220 + (buffer * 100))
+t_d_line.place(x=300, y=220 + (buffer * 20))
 
 t_c_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_C_t, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-t_c_space.place(x=300, y=240 + (buffer * 100))
+t_c_space.place(x=300, y=240 + (buffer * 20))
 
 t_b_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_B, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-t_b_line.place(x=300, y=260 + (buffer * 100))
+t_b_line.place(x=300, y=260 + (buffer * 20))
 
 t_a_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_A, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-t_a_space.place(x=300, y=280 + (buffer * 100))
+t_a_space.place(x=300, y=280 + (buffer * 20))
 
 t_g_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_G, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-t_g_line.place(x=300, y=300 + (buffer * 100))
+t_g_line.place(x=300, y=300 + (buffer * 20))
 
 f_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_F, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-f_space.place(x=300, y=320 + (buffer * 100))
+f_space.place(x=300, y=320 + (buffer * 20))
 
 e_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_E, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-e_line.place(x=300, y=340 + (buffer * 100))
+e_line.place(x=300, y=340 + (buffer * 20))
 
 d_space = customtkinter.CTkButton(master=app, text="                                                 ", command=add_D, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-d_space.place(x=300, y=360 + (buffer * 100))
+d_space.place(x=300, y=360 + (buffer * 20))
 
 c4_line=customtkinter.CTkButton(master=app, text="_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", command=add_C, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-c4_line.place(x=300, y=380 + (buffer * 100))
+c4_line.place(x=300, y=380 + (buffer * 20))
 
 b_space = customtkinter.CTkButton(master=app, text="                                                 ", command=add_B_1, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-b_space.place(x=300, y=400 + (buffer * 100))
+b_space.place(x=300, y=400 + (buffer * 20))
 
 a_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_A_1, height=1,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-a_line.place(x=300, y=420 + (buffer * 100))
+a_line.place(x=300, y=420 + (buffer * 20))
 
 g_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_G_1, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-g_space.place(x=300, y=440 + (buffer * 100))
+g_space.place(x=300, y=440 + (buffer * 20))
 
 f_line=customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_F_1, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-f_line.place(x=300, y=460 + (buffer * 100))
+f_line.place(x=300, y=460 + (buffer * 20))
 
 e_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_E_1, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-e_space.place(x=300, y=480 + (buffer * 100))
+e_space.place(x=300, y=480 + (buffer * 20))
 
 d_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_D_1, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-d_line.place(x=300, y=500 + (buffer * 100))
+d_line.place(x=300, y=500 + (buffer * 20))
 
 c_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_C_1, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-c_space.place(x=300, y=520 + (buffer * 100))
+c_space.place(x=300, y=520 + (buffer * 20))
 
 b_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_B_2, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-b_line.place(x=300, y=540 + (buffer * 100))
+b_line.place(x=300, y=540 + (buffer * 20))
 
 a_space=customtkinter.CTkButton(master=app, text="                                                 ", command=add_A_2, height=10, width=405,
                                  fg_color="transparent", hover=False, border_width=0, anchor="n", font=note_font)
-a_space.place(x=300, y=560 + (buffer * 100))
+a_space.place(x=300, y=560 + (buffer * 20))
 
 g_line = customtkinter.CTkButton(master=app, text="__________________________________________________", command=add_G_2, height=1,
                                  fg_color="transparent", hover=False, border_width=0, font=note_font)
-g_line.place(x=300, y=580 + (buffer * 100))
+g_line.place(x=300, y=580 + (buffer * 20))
 
 
 
@@ -1392,12 +1038,5 @@ nat_button.place(relx=0.39, rely=0.1, width=103)
 """
 
 print_notes(note_list)
-
-#note_list = []
-#takeInput(note_list)
-
-#note_button = customtkinter.CTkButton(master=app, text="Add Note", command=takeInput(note_list))
-#note_button.place(relx=0, rely=0, anchor=tkinter.CENTER)
-
 
 app.mainloop()
