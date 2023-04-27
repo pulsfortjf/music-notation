@@ -15,7 +15,7 @@ width = app.winfo_screenwidth()
 height = app.winfo_screenheight()
 print(width, height)
 app.title("MEscore")
-app.geometry(f"{width}x{height}")
+app.geometry(f"{width - 100}x{height - 300}")
 #app.resizable(True, True)
 app.resizable(False, True)
 
@@ -140,11 +140,14 @@ def remove_note():
         note_count -= 1
         #track = remove_last_note_from_track(track)
         track = new_remove_note(track)
-    #new_display = ""
-    #for x in note_display:
-    #    new_display = new_display + x + "  |  "
+    new_display = ""
+    for x in note_display:
+        print(f"note_display: {x}")
+        new_display += x + "  |  "
+    print(f"new_display: {new_display}")
+    print(f"note_display: {note_display}")
     
-    new_display = note_display
+    #new_display = note_display
     note_list_display.configure(text=new_display)
     print(note_list)
 
