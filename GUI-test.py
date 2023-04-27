@@ -17,7 +17,7 @@ print(width, height)
 app.title("MEscore")
 app.geometry(f"{width - 100}x{height - 300}")
 #app.resizable(True, True)
-app.resizable(False, True)
+app.resizable(True, True)
 
 accidental_font = customtkinter.CTkFont(family="system-ui", size=20, weight="bold")
 
